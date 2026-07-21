@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book — Auburn Atelier</title>
+  <meta name="description" content="Request an appointment at Auburn Atelier." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+</head>
+<body class="subpage page-book">
+  <header class="site-header" id="top">
+    <a class="logo" href="index.html">Auburn <span class="logo-ampersand">Atelier</span></a>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span><span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="services.html">Services</a>
+      <a href="studio.html">Studio</a>
+      <a href="social.html">Social</a>
+      <a href="book.html" class="nav-cta" aria-current="page">Book</a>
+    </nav>
+  </header>
+
+  <main class="book-page book-page--rich">
+    <div class="book-page__visual">
+      <img
+        src="assets/aa-14-book-panel.jpg"
+        alt=""
+        width="1600"
+        height="1200"
+        loading="eager"
+      />
+      <p class="book-page__quote">“I’ll reply with a window, not a vague ‘soon.’”</p>
+    </div>
+    <div class="book-page__form-wrap">
+      <h1>Request a date</h1>
+      <p class="lede">
+        Tell me what you are shooting, where, and how your hair has behaved in humidity before. Demo form—wire your
+        CRM or scheduler when you publish.
+      </p>
+      <form class="book-form" action="#" method="post">
+        <label>
+          Name
+          <input type="text" name="name" autocomplete="name" placeholder="Jane Q. Public" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" autocomplete="email" placeholder="you@email.com" required />
+        </label>
+        <label>
+          Project type
+          <select name="project">
+            <option>Editorial / campaign</option>
+            <option>Social content day</option>
+            <option>Maintenance color &amp; cut</option>
+            <option>Special event</option>
+          </select>
+        </label>
+        <label class="full">
+          Notes
+          <textarea name="notes" rows="4" placeholder="Inspo links, shoot date, location, allergies."></textarea>
+        </label>
+        <button type="submit" class="btn btn--solid btn--wide">Send request</button>
+        <p class="fineprint" style="grid-column: 1 / -1; text-align: center; margin: 0;">Submission opens a confirmation page for now — connect Email, Zapier, or your booking SaaS before going live.</p>
+      </form>
+
+      <aside class="book-aside" aria-label="Booking guidance">
+        <h2>Before you hit send</h2>
+        <ul>
+          <li>Share 2–3 references and one “never again” photo—both matter.</li>
+          <li>Note allergies, pregnancy status, and recent box dyes (even years ago).</li>
+          <li>If you’re booking for a brand, include usage territory so NDAs stay clean.</li>
+        </ul>
+        <p class="book-aside__fine">Replies typically inside two business days—swap with your real SLA.</p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer__brand">
+      <a href="index.html" class="logo">Auburn <span class="logo-ampersand">Atelier</span></a>
+      <p>Preview site — connect forms to your booking tool.</p>
+    </div>
+    <div class="footer__links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="services.html">Services</a>
+      <a href="studio.html">Studio</a>
+      <a href="social.html">Social</a>
+      <a href="book.html" aria-current="page">Book</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+    <p class="footer__copy">© <span id="year"></span> Auburn Atelier.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

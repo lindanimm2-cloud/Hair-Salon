@@ -1,0 +1,5 @@
+node_modules/
+video-output/
+Thumbs.db
+.DS_Store
+.vscode/
