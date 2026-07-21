@@ -1,4 +1,86 @@
 (function () {
+  var reducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Preloader — branded curtain until the page (and hero imagery) is ready */
+  var preloader = document.createElement("div");
+  preloader.className = "preloader";
+  preloader.setAttribute("aria-hidden", "true");
+  preloader.innerHTML =
+    '<div class="preloader__mark">Auburn <span>Atelier</span></div>' +
+    '<div class="preloader__bar"></div>';
+  document.body.appendChild(preloader);
+
+  var preloaderShownAt = Date.now();
+  var MIN_PRELOADER_MS = reducedMotion ? 0 : 650;
+
+  function hidePreloader() {
+    var elapsed = Date.now() - preloaderShownAt;
+    var wait = Math.max(0, MIN_PRELOADER_MS - elapsed);
+    window.setTimeout(function () {
+      preloader.classList.add("is-done");
+      window.setTimeout(function () {
+        if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+      }, 600);
+    }, wait);
+  }
+
+  if (document.readyState === "complete") {
+    hidePreloader();
+  } else {
+    window.addEventListener("load", hidePreloader);
+    /* Safety net: never trap visitors behind the curtain */
+    window.setTimeout(hidePreloader, 4000);
+  }
+
+  /* Page transitions — fade out before following internal links */
+  function isInternalPageLink(link) {
+    if (link.target && link.target !== "_self") return false;
+    if (link.hasAttribute("download")) return false;
+    var href = link.getAttribute("href") || "";
+    if (!href || href.charAt(0) === "#") return false;
+    if (/^[a-z]+:/i.test(href) && href.indexOf(window.location.origin) !== 0) return false;
+    if (link.origin && link.origin !== window.location.origin) return false;
+    /* Same page + hash → let the browser scroll */
+    if (link.pathname === window.location.pathname && link.hash) return false;
+    return true;
+  }
+
+  document.addEventListener("click", function (e) {
+    if (reducedMotion) return;
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var link = e.target.closest ? e.target.closest("a[href]") : null;
+    if (!link || !isInternalPageLink(link)) return;
+    e.preventDefault();
+    document.body.classList.add("is-leaving");
+    window.setTimeout(function () {
+      window.location.href = link.href;
+    }, 260);
+  });
+
+  /* Restore state when returning via back/forward cache */
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) {
+      document.body.classList.remove("is-leaving");
+      var stale = document.querySelector(".preloader");
+      if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+    }
+  });
+
+  /* Button icons — arrows on CTA links (skip full-width form buttons) */
+  document
+    .querySelectorAll("a.btn--solid, a.btn--ghost, a.btn--promo-ghost")
+    .forEach(function (btn) {
+      if (btn.querySelector(".btn__icon")) return;
+      var icon = document.createElement("span");
+      icon.className = "btn__icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = "\u2192";
+      btn.appendChild(icon);
+    });
+
   var yearEl = document.getElementById("year");
   if (yearEl) {
     yearEl.textContent = String(new Date().getFullYear());
@@ -34,10 +116,138 @@
     if (window.innerWidth > 720) setOpen(false);
   });
 
+  /* Custom dropdowns — brand-styled replacement for native selects */
+  document.querySelectorAll(".book-form select").forEach(function (native) {
+    var wrap = document.createElement("div");
+    wrap.className = "custom-select";
+    native.parentNode.insertBefore(wrap, native);
+    wrap.appendChild(native);
+    native.classList.add("custom-select__native");
+    native.setAttribute("tabindex", "-1");
+    native.setAttribute("aria-hidden", "true");
+
+    var labelEl = native.closest("label");
+    var labelText = labelEl ? labelEl.childNodes[0].textContent.trim() : "";
+
+    var trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "custom-select__trigger";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    if (labelText) trigger.setAttribute("aria-label", labelText);
+
+    var valueEl = document.createElement("span");
+    valueEl.className = "custom-select__value";
+    var chevron = document.createElement("span");
+    chevron.className = "custom-select__chevron";
+    chevron.setAttribute("aria-hidden", "true");
+    trigger.appendChild(valueEl);
+    trigger.appendChild(chevron);
+
+    var list = document.createElement("ul");
+    list.className = "custom-select__list";
+    list.setAttribute("role", "listbox");
+    if (labelText) list.setAttribute("aria-label", labelText);
+
+    var options = Array.prototype.slice.call(native.options);
+    var current = native.selectedIndex < 0 ? 0 : native.selectedIndex;
+
+    var items = options.map(function (opt, i) {
+      var li = document.createElement("li");
+      li.className = "custom-select__option";
+      li.setAttribute("role", "option");
+      li.textContent = opt.text;
+      li.addEventListener("click", function () {
+        choose(i);
+        close(true);
+      });
+      list.appendChild(li);
+      return li;
+    });
+
+    function render() {
+      valueEl.textContent = options[current] ? options[current].text : "";
+      items.forEach(function (li, i) {
+        li.setAttribute("aria-selected", i === current ? "true" : "false");
+      });
+    }
+
+    function choose(i) {
+      current = i;
+      native.selectedIndex = i;
+      render();
+    }
+
+    function isOpen() {
+      return wrap.classList.contains("is-open");
+    }
+
+    function open() {
+      wrap.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+
+    function close(refocus) {
+      wrap.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      if (refocus) trigger.focus();
+    }
+
+    trigger.addEventListener("click", function () {
+      if (isOpen()) {
+        close(false);
+      } else {
+        open();
+      }
+    });
+
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (!isOpen()) {
+          open();
+          return;
+        }
+        var next = current + (e.key === "ArrowDown" ? 1 : -1);
+        choose(Math.min(Math.max(next, 0), options.length - 1));
+      } else if (e.key === "Home" && isOpen()) {
+        e.preventDefault();
+        choose(0);
+      } else if (e.key === "End" && isOpen()) {
+        e.preventDefault();
+        choose(options.length - 1);
+      } else if ((e.key === "Enter" || e.key === " ") && isOpen()) {
+        e.preventDefault();
+        close(true);
+      } else if (e.key === "Escape" && isOpen()) {
+        close(true);
+      }
+    });
+
+    document.addEventListener("click", function (e) {
+      if (isOpen() && !wrap.contains(e.target)) close(false);
+    });
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(list);
+    render();
+  });
+
   document.querySelectorAll("form.book-form").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      window.location.href = "thank-you.html";
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn && !submitBtn.classList.contains("is-loading")) {
+        submitBtn.classList.add("is-loading");
+        submitBtn.setAttribute("aria-busy", "true");
+        var spinner = document.createElement("span");
+        spinner.className = "btn__spinner";
+        spinner.setAttribute("aria-hidden", "true");
+        submitBtn.appendChild(spinner);
+      }
+      window.setTimeout(function () {
+        window.location.href = "thank-you.html";
+      }, reducedMotion ? 0 : 800);
     });
   });
 

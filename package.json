@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-hair-ad": "node scripts/generate-hair-ad.js"
+    "generate-hair-ad": "node scripts/generate-hair-ad.js",
+    "audit": "node scripts/audit-site.js && node scripts/audit-consistency.js && node scripts/audit-structure.js && node scripts/audit-text.js"
   },
   "keywords": [],
   "author": "",

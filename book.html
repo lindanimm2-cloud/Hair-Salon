@@ -42,43 +42,59 @@
     <div class="book-page__form-wrap">
       <h1>Request a date</h1>
       <p class="lede">
-        Tell me what you are shooting, where, and how your hair has behaved in humidity before. Demo form—wire your
-        CRM or scheduler when you publish.
+        Tell me about your hair, the look you’re after, and how your hair has behaved in humidity before. I’ll
+        reply with a time window, a price range, and how to prep for your visit.
       </p>
       <form class="book-form" action="#" method="post">
         <label>
-          Name
-          <input type="text" name="name" autocomplete="name" placeholder="Jane Q. Public" required />
+          First name
+          <input type="text" name="first-name" autocomplete="given-name" placeholder="Jane" required />
+        </label>
+        <label>
+          Surname
+          <input type="text" name="surname" autocomplete="family-name" placeholder="Public" required />
         </label>
         <label>
           Email
           <input type="email" name="email" autocomplete="email" placeholder="you@email.com" required />
         </label>
         <label>
-          Project type
-          <select name="project">
-            <option>Editorial / campaign</option>
-            <option>Social content day</option>
-            <option>Maintenance color &amp; cut</option>
-            <option>Special event</option>
+          Phone number
+          <input type="tel" name="phone" autocomplete="tel" placeholder="082 123 4567" required />
+        </label>
+        <label>
+          Appointment type
+          <select name="appointment-type">
+            <option>Color</option>
+            <option>Cut</option>
+            <option>Color &amp; cut</option>
+            <option>Blowout / styling</option>
+            <option>Wedding / special event</option>
+          </select>
+        </label>
+        <label>
+          Preferred contact
+          <select name="contact-method">
+            <option>WhatsApp</option>
+            <option>Phone call</option>
+            <option>Email</option>
           </select>
         </label>
         <label class="full">
           Notes
-          <textarea name="notes" rows="4" placeholder="Inspo links, shoot date, location, allergies."></textarea>
+          <textarea name="notes" rows="4" placeholder="Reference links, preferred dates, allergies, hair history."></textarea>
         </label>
         <button type="submit" class="btn btn--solid btn--wide">Send request</button>
-        <p class="fineprint" style="grid-column: 1 / -1; text-align: center; margin: 0;">Submission opens a confirmation page for now — connect Email, Zapier, or your booking SaaS before going live.</p>
       </form>
 
       <aside class="book-aside" aria-label="Booking guidance">
         <h2>Before you hit send</h2>
         <ul>
-          <li>Share 2–3 references and one “never again” photo—both matter.</li>
+          <li>Share 2–3 reference photos and one “never again” photo—both matter.</li>
           <li>Note allergies, pregnancy status, and recent box dyes (even years ago).</li>
-          <li>If you’re booking for a brand, include usage territory so NDAs stay clean.</li>
+          <li>Booking for a wedding? Mention the date and party size so we can plan the morning.</li>
         </ul>
-        <p class="book-aside__fine">Replies typically inside two business days—swap with your real SLA.</p>
+        <p class="book-aside__fine">Replies typically arrive inside two business days.</p>
       </aside>
     </div>
   </main>
@@ -86,7 +102,7 @@
   <footer class="site-footer">
     <div class="footer__brand">
       <a href="index.html" class="logo">Auburn <span class="logo-ampersand">Atelier</span></a>
-      <p>Preview site — connect forms to your booking tool.</p>
+      <p>Hair color, cuts, and styling — Cape Town.</p>
     </div>
     <div class="footer__links">
       <a href="index.html">Home</a>
